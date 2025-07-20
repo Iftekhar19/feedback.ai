@@ -1,103 +1,128 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useEffect, useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
+
+const feedbacks = [
+  {
+    quote: "“Feedback.ai streamlined our user research workflow. Love it!”",
+    author: "– Priya D, Product Manager",
+  },
+  {
+    quote: "“Collecting insights from beta users has never been easier.”",
+    author: "– Mark L, Founder",
+  },
+  {
+    quote: "“We made faster design decisions thanks to real-time feedback.”",
+    author: "– Clara T, UX Lead",
+  },
+  {
+    quote: "“A must-have for teams building customer-centric products.”",
+    author: "– Diego M, Head of Growth",
+  },
+];
+
+export default function HeroSection() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      handleNext();
+    }, 6000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleNext = () => {
+    setIndex((prev) => (prev + 1) % feedbacks.length);
+  };
+
+  const handlePrev = () => {
+    setIndex((prev) => (prev - 1 + feedbacks.length) % feedbacks.length);
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="flex flex-col h-[100dvh] ">
+      <Navbar />
+      <div className="  h-full  overflow-y-auto">
+        <section className="w-full h-full  flex flex-col md:flex-row items-center justify-between px-6 md:px-16 py-24 bg-gradient-to-b from-white to-gray-50">
+          {/* Left Content */}
+          <div className="md:w-1/2 text-center md:text-left mb-12 md:mb-0 space-y-6 ">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+              Turn Feedback into Action with{" "}
+              <span className="text-indigo-600">Feedback.ai</span>
+            </h1>
+            <p className="text-gray-600 text-lg max-w-md  ">
+              Understand your users, iterate faster, and build better products.
+              Feedback.ai gives you the tools to collect, analyze, and act on
+              feedback — instantly.
+            </p>
+            <div className="">
+              <Button className="mt-4">Start Collecting Feedback</Button>
+            </div>
+          </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          {/* Right Side - Carousel */}
+          <div className="md:w-1/2 w-full max-w-lg mx-auto flex flex-col items-center">
+            <Card className="shadow-xl border rounded-xl p-6 min-h-[180px] flex items-center justify-center text-center relative overflow-hidden">
+              <CardContent className="w-full h-full">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-gray-800 text-lg italic"
+                  >
+                    <p className="mb-2">{feedbacks[index].quote}</p>
+                    <p className="text-sm text-gray-500">
+                      {feedbacks[index].author}
+                    </p>
+                  </motion.div>
+                </AnimatePresence>
+              </CardContent>
+            </Card>
+
+            {/* Controls */}
+            <div className="flex items-center gap-4 mt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handlePrev}
+                className="rounded-full px-4 py-1"
+              >
+                ← Prev
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleNext}
+                className="rounded-full px-4 py-1"
+              >
+                Next →
+              </Button>
+            </div>
+
+            {/* Dots */}
+            <div className="flex justify-center mt-4 space-x-2">
+              {feedbacks.map((_, i) => (
+                <span
+                  key={i}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    i === index ? "bg-indigo-600" : "bg-gray-300"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+        <Footer />
+      </div>
     </div>
   );
 }
