@@ -21,6 +21,8 @@ import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
 import { toast } from "sonner";
+import Link from "next/link";
+import { Loader2 } from "lucide-react";
 
 const signInSchema = z.object({
   itentifier: z
@@ -41,10 +43,7 @@ type SignInFormValues = z.infer<typeof signInSchema>;
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
-  // const [apiError,setApiError]=useState({
-  //   isError:false,
-  //   errorMsg:""
-  // })
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<SignInFormValues>({
     resolver: zodResolver(signInSchema),
@@ -55,31 +54,33 @@ export default function SignInForm() {
   });
 
   const onSubmit = async (data: SignInFormValues) => {
-    // console.log("Sign in with", data);
-    let userRes = await fetch("/api/signin", {
+    setLoading(true);
+    const userRes = await fetch("/api/signin", {
       method: "POST",
       body: JSON.stringify({
         identifier: data.itentifier,
         password: data.password,
       }),
     });
-    userRes = await userRes.json();
-    let id = "";
-    if (!userRes.success) {
-      id = toast.error(userRes?.message, {
+    const res = await userRes.json();
+    let id;
+    if (!res?.success) {
+      id = toast.error(res?.message, {
         position: "top-right",
       });
+      setLoading(false);
       return;
     }
-    const { user } = userRes;
+    const { user } = res;
     if (!user?.isVerified) {
       toast.error("Please verify first", {
         id: id || "",
         position: "top-right",
       });
+      setLoading(false);
       return;
     }
-    const res = await signIn("credentials", {
+    await signIn("credentials", {
       redirect: true,
       email: data.itentifier,
       password: data.password,
@@ -90,13 +91,50 @@ export default function SignInForm() {
       emailId: user?.email,
       username: user?.username,
     });
+    setLoading(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#cfd9df] to-[#e2ebf0] p-4">
-      <Card className="w-full max-w-[800px]  shadow-inner bg-white border border-gray-300 flex md:flex-row sm:flex-col ">
-        <CardContent className="p-6 sm:pl-8 md:pl-6 flex-1   sm:order-2 md:order-1">
-          <h2 className="text-xl font-semibold text-center mb-6">Sign In</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#cfd9df] to-[#e2ebf0] p-1 md:p-4">
+      <Card className="w-full max-w-[800px] shadow-inner bg-white border border-gray-300 flex md:flex-row sm:flex-col">
+        {/* Left Side: Illustration */}
+        <CardContent className="flex-1 ml-2 flex flex-col items-center justify-center rounded-l-lg p-0 sm:order-[-1] md:order-1">
+          <Image
+            src="/animations/animate.png"
+            alt="Sign in animation"
+            width={320}
+            height={320}
+            className="object-contain w-72 h-72 mt-8 mb-4"
+            priority
+          />
+          <div className="text-center px-6 pb-8">
+            <h3 className="text-xl font-bold text-indigo-700 mb-2">
+              Welcome Back!
+            </h3>
+            <p className="text-gray-600 text-sm">
+              Sign in to access your dashboard and manage your feedback.
+            </p>
+          </div>
+        </CardContent>
+        {/* Right Side: Form */}
+        <CardContent className="p-6 sm:pl-8 md:pl-6 flex-1 sm:order-2 md:order-1 flex flex-col justify-center">
+          {/* Company Name */}
+          <div className="flex flex-col items-center mb-6">
+            <div className="flex items-center gap-2">
+              <span className="inline-block text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 tracking-tight drop-shadow">
+                TrueFeedback
+              </span>
+              <span className="inline-block px-2 py-1 rounded bg-indigo-100 text-xs font-bold text-indigo-700 ml-1 tracking-widest shadow">
+                AI
+              </span>
+            </div>
+            <div className="w-16 h-1 mx-auto mt-3 rounded-full bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 opacity-80"></div>
+          </div>
+          <h2
+            className="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 text-transparent bg-clip-text"
+          >
+            Sign In
+          </h2>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FormField
@@ -149,20 +187,33 @@ export default function SignInForm() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full shadow-lg mt-2">
-                Sign In
+              <Button
+                type="submit"
+                className="w-full shadow-lg mt-2 cursor-pointer"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="animate-spin h-4 w-4 mr-2 inline" />
+                    Signing In...
+                  </>
+                ) : (
+                  "Sign In"
+                )}
               </Button>
+              <div className="text-center mt-0">
+                <span className="text-sm text-gray-600">
+                  Don&apos;t have an account?{" "}
+                  <Link
+                    href="/sign-up"
+                    className="text-indigo-600 hover:underline font-medium"
+                  >
+                    Sign up
+                  </Link>
+                </span>
+              </div>
             </form>
           </Form>
-        </CardContent>
-        <CardContent className="flex-1  flex sm:order-[-1] md:order-1">
-          <Image
-            src="/animations/signup.png"
-            alt="Sign in animation"
-            width={600}
-            height={600}
-            className="object-contain flex-1 "
-          />
         </CardContent>
       </Card>
     </div>

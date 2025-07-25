@@ -45,7 +45,7 @@ export async function POST(request: Request) {
       { status: 201 }
     );
   } catch (error) {
-    console.log("Failed to update the user accept message");
+    console.log("Failed to update the user accept message",error);
     return Response.json(
       {
         success: false,
@@ -56,7 +56,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET() {
   await dbConnect();
   const session = await getServerSession(authOptions);
   const user: User = session?.user as User;
@@ -89,7 +89,7 @@ export async function GET(request: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.log("Error occured while finding user");
+    console.log("Error occured while finding user",error);
     return Response.json(
       {
         success: false,

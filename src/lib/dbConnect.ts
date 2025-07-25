@@ -17,15 +17,15 @@ async function dbConnect():Promise<void> {
 
    try {
     // console.log(process.env.NEXT_PUBLIC_MONGODB_URI)
-   const db= await mongoose.connect(process.env.MONGODB_URI,{
+   const db= await mongoose.connect(process.env.MONGODB_URI!,{
     
    })
 
   connection.isConnected= db.connections[0].readyState
   console.log("DB connect successfully")
     
-   } catch (error:any) {
-    console.log(error?.message)
+   } catch (error) {
+    console.log("Unexpected error",error)
     process.exit(1)
    }
 }

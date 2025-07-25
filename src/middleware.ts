@@ -1,6 +1,6 @@
 import { NextResponse,NextRequest } from 'next/server'
 
-import {default} from 'next-auth/middleware'
+// import {default} from 'next-auth/middleware'
 import { getToken } from 'next-auth/jwt'
  
 // This function can be marked `async` if using `await` inside
@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
 
   const token=await getToken({req:request});
   const url= request.nextUrl
-  // console.log(token)
+  console.log(token)
   if(token &&
  (
     (url.pathname.startsWith('/sign-in'))||
@@ -31,5 +31,5 @@ export async function middleware(request: NextRequest) {
  
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ['/sign-in','/sign-up','/forgot-password','/'],
+  matcher: ['/sign-in','/sign-up','/forgot-password',"/dashboard"],
 }

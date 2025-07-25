@@ -5,16 +5,23 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import React from "react";
 
-export default function Navbar() {
+ function Navbar() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  
 
   return (
     <nav className="w-full px-6 md:px-16 py-4 border-b bg-white flex justify-between items-center">
       {/* Left: Logo */}
-      <Link href="/" className="text-xl font-bold text-indigo-600">
-        Feedback.ai
+      <Link href="/" className="flex items-center gap-2 select-none group">
+        <span className="text-2xl font-extrabold bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 text-transparent bg-clip-text tracking-tight group-hover:scale-105 transition-transform">
+          TrueFeedback
+        </span>
+        <span className="inline-block px-2 py-1 rounded bg-indigo-100 text-xs font-bold text-indigo-700 ml-1 tracking-widest shadow group-hover:bg-indigo-200 transition-colors">
+          AI
+        </span>
       </Link>
 
       {/* Right: Auth Buttons or Profile */}
@@ -49,3 +56,4 @@ export default function Navbar() {
     </nav>
   );
 }
+export default React.memo(Navbar);
