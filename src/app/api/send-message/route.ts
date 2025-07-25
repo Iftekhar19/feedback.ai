@@ -1,7 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import { UserModel } from "@/model/User.model";
-import { messageSchemavalidation } from "@/ValidationSchema/MessageSchemaValidation";
-import { Message } from "@/model/User.model";
+import { Message, UserModel } from "@/model/User.model";
 
 export async function POST(request: Request) {
   await dbConnect();
@@ -35,7 +33,7 @@ export async function POST(request: Request) {
         message:'Message sent successfully'
     },{status:201})
   } catch (error) {
-    console.log("Error while adding message");
+    console.log("Error while adding message",error);
     return Response.json(
       {
         success: false,

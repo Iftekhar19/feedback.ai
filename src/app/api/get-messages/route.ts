@@ -1,16 +1,18 @@
 import { getServerSession } from "next-auth";
+import { NextResponse } from "next/server";
 import { authOptions } from "../auth/[...nextauth]/options";
 import dbConnect from "@/lib/dbConnect";
 import { UserModel } from "@/model/User.model";
 import { User } from "next-auth";
 import mongoose from "mongoose";
 
-export async function GET(request: Request) {
+export async function GET() {
   await dbConnect();
   const session = await getServerSession(authOptions);
   const user: User = session?.user as User;
+
   if (!session || !session?.user) {
-    return Response.json(
+    return NextResponse.json(
       {
         success: false,
         message: "Unauthenticated User",
@@ -22,36 +24,37 @@ export async function GET(request: Request) {
   const userId = new mongoose.Types.ObjectId(user._id);
 
   try {
-    const user = await UserModel.aggregate([
-      { $match: { id: userId } },
-      { $unwind: "messages" },
+    const res = await UserModel.aggregate([
+      { $match: { _id: userId } },                    // fixed field name
+      { $unwind: "$messages" },                       // fixed path syntax
       { $sort: { "messages.createdAt": -1 } },
       { $group: { _id: "$_id", messages: { $push: "$messages" } } },
     ]);
-    if (!user || user.length === 0) {
-      return Response.json(
+    // console.log(res)
+    if (!res || res.length === 0) {
+      return NextResponse.json(
         {
-          success: false,
-          message: "User not found",
+          success: true,
+          message: [],
         },
-        { status: 401 }
+        { status: 200 }
       );
     }
-    return Response.json(
+    return NextResponse.json(
       {
         success: true,
-        message: user[0].messages,
+        messages: res[0].messages,
       },
-      { status: 201 }
+      { status: 200 }
     );
   } catch (error) {
-    console.log("Error occured while fetching messages");
-    return Response.json(
+    console.log("Error occurred while fetching messages", error);
+    return NextResponse.json(
       {
         success: false,
-        message: "Error occured while fetching messages",
+        message: "Error occurred while fetching messages",
       },
-      { status: 501 }
+      { status: 500 }
     );
   }
 }

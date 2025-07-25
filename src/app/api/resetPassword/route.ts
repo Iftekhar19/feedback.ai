@@ -29,7 +29,7 @@ export async function POST(req:NextRequest) {
         console.log(error)
         return Response.json({
             success:false,
-            message:error.message
+            message:"something went wrong please try again later"
         },{status:500})
 
         

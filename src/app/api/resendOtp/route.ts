@@ -24,11 +24,11 @@ export async function POST(req: NextRequest) {
         message: "Something went rong please try again later",
       });
     }
-  } catch (error: any) {
-    console.log(error.message);
+  } catch (error) {
+    console.log(error);
     return Response.json({
       success: false,
-      message: error.message,
+      message: "Unexpected error occured7"
     });
   }
 }

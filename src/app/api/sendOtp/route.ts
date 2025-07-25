@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import emailjs from "@emailjs/nodejs";
 
-function generateSixDigitOTP(): string {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-}
+// function generateSixDigitOTP(): string {
+//   return Math.floor(100000 + Math.random() * 900000).toString();
+// }
 
 export async function POST(req: Request) {
   try {
@@ -32,9 +32,9 @@ export async function POST(req: Request) {
       }
     );
 
-    return NextResponse.json({ message: "OTP sent successfully", otp }, { status: 200 });
-  } catch (error: any) {
+    return NextResponse.json({ message: "OTP sent successfully", otp,success:true }, { status: 200 });
+  } catch (error) {
     console.error("EmailJS Error:", error);
-    return NextResponse.json({ error: error.message || "Something went wrong" }, { status: 500 });
+    return NextResponse.json({message:"Something went wrong",success:false }, { status: 500 });
   }
 }

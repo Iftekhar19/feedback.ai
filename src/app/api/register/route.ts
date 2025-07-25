@@ -60,7 +60,7 @@ export async function POST(req: Request) {
     const emailResponse = await sendEmail(email, verifyCode);
     if (!emailResponse.success) {
       return Response.json(
-        { succes: false, message: emailResponse.message || "" },
+        { succes: false, message: emailResponse?.message || "" },
         { status: 201 }
       );
     }
@@ -69,12 +69,12 @@ export async function POST(req: Request) {
       success:true,
       message:`User created successfully and verification code has been sent successfully to ${email}`
     })
-  } catch (error:any) {
-    console.log("Error registering user");
+  } catch (error) {
+    console.log("Error registering user",error);
     return Response.json(
       {
         success: false,
-        message: error.message
+        message: "Error registering user"
       },
       {
         status: 500,

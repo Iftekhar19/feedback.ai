@@ -1,8 +1,6 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials"; // ✅ default import
-import bcrypt from "bcryptjs";
-import dbConnect from "@/lib/dbConnect";
-import { UserModel } from "@/model/User.model";
+import { UserCredentials } from "@/types/ApiResponse";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -14,53 +12,22 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
         
       },
-
-      async authorize(credentials: any): Promise<any> {
-        // await dbConnect();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+      async authorize(credentials:any):Promise<any> {
         try {
-          const {_id,email,username,isVerified,isAcceptingMessage}=credentials
-          // console.log(_id,email,username,isVerified,isAcceptingMessage)
-          // const user = await UserModel.findOne({
-          //   $or: [
-          //     { email: credentials.email },
-          //     { username: credentials.email },
-          //   ],
-          // });
-
-          // if (!user) {
-          //   throw new Error("Invalid username or email");
-          // }
-
-          // if (!user.isVerified) {
-          //   throw new Error("User is not verified. Please verify and try again.");
-          // }
-
-          // const isPassCorrect = await bcrypt.compare(
-          //   credentials.password,
-          //   user.password
-          // );
-
-          // if (!isPassCorrect) {
-          //   throw new Error("Incorrect password");
-          // }
-         
-          // return {
-          //   _id: user._id?.toString(),
-          //   email: user.email,
-          //   username: user.username,
-          //   isVerified: user.isVerified,
-          //   isAcceptingMessage: user.isAcceptingMessage,
-          // };
+          if (!credentials) return null;
+          const { _id, emailId, username, isVerified, isAcceptingMessage } = credentials as UserCredentials;
           return {
-            _id,
-            email,
-            username,
-            isVerified,
-            isAcceptingMessage
+            _id:_id||"",
+            email: emailId||"",
+            username :username||"",
+            isVerified:isVerified||false,
+            isAcceptingMessage:isAcceptingMessage||true
+          
           };
         } catch (error) {
           console.error("Login error:", error);
-          return null;
+         throw new Error("Login error")
         }
       },
     }),
@@ -94,3 +61,4 @@ export const authOptions: NextAuthOptions = {
     },
   },
 };
+

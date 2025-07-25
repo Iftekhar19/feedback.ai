@@ -48,6 +48,14 @@ export default function HeroSection() {
   return (
     <div className="flex flex-col h-[100dvh] ">
       <Navbar />
+      <AnimatePresence mode="popLayout">
+      <motion.div className="h-full"
+             initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.75 }}
+      >
+
       <div className="  h-full  overflow-y-auto">
         <section className="w-full h-full  flex flex-col md:flex-row items-center justify-between px-6 md:px-16 py-24 bg-gradient-to-b from-white to-gray-50">
           {/* Left Content */}
@@ -123,6 +131,8 @@ export default function HeroSection() {
         </section>
         <Footer />
       </div>
+      </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

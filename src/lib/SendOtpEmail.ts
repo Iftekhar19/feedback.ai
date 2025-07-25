@@ -25,7 +25,7 @@ export const sendEmail=async(
     console.log(error)
     return {
         success:false,
-        message:error.message
+        message:"Unable to send email"
     }
    }
 }
